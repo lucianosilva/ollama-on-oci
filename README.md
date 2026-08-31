@@ -52,12 +52,12 @@ The following tools are required on the local workstation:
 
 The reference environment used during validation was:
 
-* OCI Compute: VM.Standard.A1.Flex
-* OCPU: `2`;
-* Memory: 12 GB
-* Boot Volume: 50 GB
-* Operating System: Oracle Linux 9
-* Ollama model: qwen3:4b
+* OCI Compute: ```VM.Standard.A1.Flex```
+* OCPU: ```2```
+* Memory: ```12 GB```
+* Boot Volume: ```50 GB```
+* Operating System: ```Oracle Linux 9```
+* Ollama model: ```qwen3:4b```
 
 This is a reference configuration, not a minimum requirement.
 
@@ -109,7 +109,7 @@ ssh_public_key_path
 ssh_ingress_cidr
 https_ingress_cidr
 ````
-Use CIDR notation for access rules, for example: ````<YOUR-PUBLIC-UP>/32````
+Use CIDR notation for access rules, for example: ````<YOUR-PUBLIC-IP>/32````
 
 Initialize and validate Terraform:
 `````

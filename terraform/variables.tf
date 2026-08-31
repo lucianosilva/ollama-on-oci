@@ -3,23 +3,6 @@ variable "tenancy_ocid" {
   type        = string
 }
 
-#variable "user_ocid" {
-#  description = "OCID of the OCI user used by Terraform."
-#  type        = string
-#}
-
-#variable "fingerprint" {
-#  description = "Fingerprint of the OCI API signing key."
-#  type        = string
-#}
-
-#variable "private_key_path" {
-#  description = "Local path to the OCI API signing private key."
-#  type        = string
-#}
-
-variable "region" {
-  description = "OCI region where the resources will be created."
   type        = string
   default     = "sa-saopaulo-1"
 }
@@ -80,11 +63,6 @@ variable "https_ingress_cidr" {
   type        = string
 }
 
-variable "ollama_model" {
-  description = "Ollama model to be installed by Ansible."
-  type        = string
-  default     = "qwen3:4b"
-}
 variable "operating_system" {
   description = "Operating system used by the Compute instance."
   type        = string
