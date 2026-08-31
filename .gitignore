@@ -2,18 +2,16 @@
 .terraform/
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
+tfplan
 terraform.tfvars
 
 # Ansible
-*.retry
+ansible/inventory
 
-# SSH / certificates / secrets
-*.key
+# Secrets / keys / certificates
 *.pem
+*.key
 *.crt
-*.p12
-*.pfx
 *.htpasswd
 
 # OS / IDE

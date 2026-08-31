@@ -1,0 +1,126 @@
+---
+- name: Configure Ollama on OCI
+  hosts: ollama
+  become: true
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - zstd
+          - nginx
+          - httpd-tools
+          - openssl
+          - policycoreutils-python-utils
+          - python3-pip
+        state: present
+
+    - name: Install passlib
+      ansible.builtin.pip:
+        name: passlib
+        executable: pip3
+
+    - name: Install Ollama
+      ansible.builtin.shell: |
+        curl -fsSL https://ollama.com/install.sh | sh
+      args:
+        creates: /usr/bin/ollama
+
+    - name: Ensure Ollama service is enabled and running
+      ansible.builtin.systemd:
+        name: ollama
+        enabled: true
+        state: started
+
+    - name: Pull Ollama model
+      ansible.builtin.command:
+        cmd: "ollama pull {{ ollama_model }}"
+      register: ollama_pull
+      changed_when: "'pulling manifest' in ollama_pull.stdout or 'success' in ollama_pull.stdout"
+
+    - name: Allow NGINX network connections with SELinux
+      ansible.posix.seboolean:
+        name: httpd_can_network_connect
+        state: true
+        persistent: true
+      when: ansible_facts["selinux"]["status"] == "enabled"
+
+    - name: Create NGINX authentication directory
+      ansible.builtin.file:
+        path: "{{ nginx_auth_directory }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create NGINX TLS directory
+      ansible.builtin.file:
+        path: "{{ tls_directory }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create Basic Auth user
+      community.general.htpasswd:
+        path: "{{ nginx_auth_directory }}/ollama.htpasswd"
+        name: "{{ nginx_auth_user }}"
+        password: "{{ nginx_auth_password }}"
+        owner: root
+        group: nginx
+        mode: "0640"
+
+    - name: Generate self-signed TLS private key
+      community.crypto.openssl_privatekey:
+        path: "{{ tls_directory }}/ollama.key"
+        size: 2048
+        owner: root
+        group: root
+        mode: "0600"
+
+    - name: Generate self-signed certificate
+      ansible.builtin.command:
+        cmd: >
+          openssl req
+          -x509
+          -nodes
+          -days 365
+          -key {{ tls_directory }}/ollama.key
+          -out {{ tls_directory }}/ollama.crt
+          -subj /CN={{ ansible_host }}
+          -addext subjectAltName=IP:{{ ansible_host }}
+      args:
+        creates: "{{ tls_directory }}/ollama.crt"
+
+    - name: Deploy NGINX configuration
+      ansible.builtin.template:
+        src: templates/ollama.conf.j2
+        dest: /etc/nginx/conf.d/ollama.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Validate NGINX configuration
+      ansible.builtin.command:
+        cmd: nginx -t
+      changed_when: false
+
+    - name: Enable and start NGINX
+      ansible.builtin.systemd:
+        name: nginx
+        enabled: true
+        state: started
+
+    - name: Enable HTTPS in firewalld
+      ansible.posix.firewalld:
+        service: https
+        permanent: true
+        immediate: true
+        state: enabled
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: reloaded

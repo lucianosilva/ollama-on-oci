@@ -1,0 +1,10 @@
+ollama_model: "qwen3:4b"
+
+ollama_host: "127.0.0.1"
+ollama_port: 11434
+
+nginx_https_port: 443
+nginx_auth_user: "oio-api"
+
+tls_directory: "/etc/nginx/tls"
+nginx_auth_directory: "/etc/nginx/auth"
