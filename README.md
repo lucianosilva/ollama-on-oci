@@ -197,3 +197,7 @@ The implementation restricts external access strictly to ports 22 (SSH) and 443 
 * [Ollama FAQ](https://docs.ollama.com/faq)
 * [NGINX Reverse Proxy Documentation](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)
 * [Oracle Linux firewalld Documentation](https://docs.oracle.com/en/operating-systems/oracle-linux/9/firewall/firewall-ConfiguringfirewalldZones.html)
+
+## License
+
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
