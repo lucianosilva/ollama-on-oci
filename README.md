@@ -188,6 +188,9 @@ Example:
 }
 `````
 
+## Supplementary articles
+[Running Ollama on OCI](https://medium.com/@lcarmo2701/running-ollama-on-oci-1dfbb33a63d1?sharedUserId=lcarmo2701)
+
 ## Security Notes
 The implementation restricts external access strictly to ports 22 (SSH) and 443 (HTTPS), keeping the Ollama service isolated within the private network. Credentials, private keys, certificates, and Terraform/Ansible state files must not be committed. For production, replace self-signed certificates and basic authentication with trusted TLS, CIDR restrictions, and a secrets manager.
 
@@ -200,4 +203,8 @@ The implementation restricts external access strictly to ports 22 (SSH) and 443 
 
 ## License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+## Disclaimer
+
+This project is an independent technical reference based on personal implementation experience. It is not an Oracle product and does not constitute official Oracle documentation, support guidance, or a warranty of production suitability.
